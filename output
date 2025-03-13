@@ -1,43 +1,49 @@
-
-from PySide6.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLineEdit, QPushButton, QLabel, QMessageBox
+from PySide6.QtWidgets import (
+    QApplication, QWidget, QVBoxLayout, QHBoxLayout,
+    QLineEdit, QPushButton, QLabel, QMessageBox
+)
 import sys
+
+class AnalysisViewer(QWidget):
+    def __init__(self, data):
+        super().__init__()
+        self.setWindowTitle("Analysis Results")
+        self.setFixedSize(600, 300)
+        self.init_ui(data)
+
+    def init_ui(self, data):
+        layout = QVBoxLayout()
+
+        for i, text in enumerate(data):
+            row = QHBoxLayout()
+
+            label = QLabel(f"Field {i+1}:")
+            entry = QLineEdit()
+            entry.setText(text)
+            entry.setReadOnly(True)
+            copy_btn = QPushButton("Copy")
+
+            copy_btn.clicked.connect(self.make_copy_func(text))
+            row.addWidget(label)
+            row.addWidget(entry)
+            row.addWidget(copy_btn)
+
+            layout.addLayout(row)
+
+        self.setLayout(layout)
+
+    def make_copy_func(self, text):
+        def copy():
+            QApplication.clipboard().setText(text)
+            QMessageBox.information(self, "Copied", f"Copied: {text}")
+        return copy
 
 def show_analysis_results(data):
     app = QApplication(sys.argv)
-    window = QWidget()
-    window.setWindowTitle("Analysis Results")
-    window.setFixedSize(600, 300)
-
-    layout = QVBoxLayout()
-
-    for i, text in enumerate(data):
-        row = QHBoxLayout()
-
-        label = QLabel(f"Field {i+1}:")
-        entry = QLineEdit()
-        entry.setText(text)
-        entry.setReadOnly(True)
-        copy_btn = QPushButton("Copy")
-
-        def make_copy_func(field_text=text):
-            def copy():
-                app.clipboard().setText(field_text)
-                QMessageBox.information(window, "Copied", f"Copied: {field_text}")
-            return copy
-
-        copy_btn.clicked.connect(make_copy_func())
-
-        row.addWidget(label)
-        row.addWidget(entry)
-        row.addWidget(copy_btn)
-
-        layout.addLayout(row)
-
-    window.setLayout(layout)
-    window.show()
+    viewer = AnalysisViewer(data)
+    viewer.show()
     app.exec()
 
-# ìì ì¬ì©
 if __name__ == "__main__":
     analyzed_data = [
         "Version: v1.2.3",
