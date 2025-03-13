@@ -10,6 +10,7 @@ class AnalysisViewer(QWidget):
         self.setWindowTitle("Analysis Results")
         self.setFixedSize(600, 300)
         self.init_ui(data)
+        self.set_style()
 
     def init_ui(self, data):
         layout = QVBoxLayout()
@@ -31,6 +32,32 @@ class AnalysisViewer(QWidget):
             layout.addLayout(row)
 
         self.setLayout(layout)
+
+    def set_style(self):
+        self.setStyleSheet("""
+            QWidget {
+                background-color: #2e2e2e;
+                color: #f0f0f0;
+                font-size: 13px;
+            }
+            QLineEdit {
+                background-color: #3c3c3c;
+                color: #f0f0f0;
+                border: 1px solid #555;
+                padding: 5px;
+                border-radius: 4px;
+            }
+            QPushButton {
+                background-color: #3498db;
+                color: white;
+                padding: 6px 12px;
+                border: none;
+                border-radius: 4px;
+            }
+            QPushButton:hover {
+                background-color: #2980b9;
+            }
+        """)
 
     def make_copy_func(self, text):
         def copy():
