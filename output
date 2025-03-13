@@ -1,0 +1,49 @@
+
+from PySide6.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLineEdit, QPushButton, QLabel, QMessageBox
+import sys
+
+def show_analysis_results(data):
+    app = QApplication(sys.argv)
+    window = QWidget()
+    window.setWindowTitle("Analysis Results")
+    window.setFixedSize(600, 300)
+
+    layout = QVBoxLayout()
+
+    for i, text in enumerate(data):
+        row = QHBoxLayout()
+
+        label = QLabel(f"Field {i+1}:")
+        entry = QLineEdit()
+        entry.setText(text)
+        entry.setReadOnly(True)
+        copy_btn = QPushButton("Copy")
+
+        def make_copy_func(field_text=text):
+            def copy():
+                app.clipboard().setText(field_text)
+                QMessageBox.information(window, "Copied", f"Copied: {field_text}")
+            return copy
+
+        copy_btn.clicked.connect(make_copy_func())
+
+        row.addWidget(label)
+        row.addWidget(entry)
+        row.addWidget(copy_btn)
+
+        layout.addLayout(row)
+
+    window.setLayout(layout)
+    window.show()
+    app.exec()
+
+# ìì ì¬ì©
+if __name__ == "__main__":
+    analyzed_data = [
+        "Version: v1.2.3",
+        "Model ID: ABC123",
+        "Build Date: 2024-03-10",
+        "CRC: 0x9FDE",
+        "Bootloader Addr: 0x8000000"
+    ]
+    show_analysis_results(analyzed_data)
