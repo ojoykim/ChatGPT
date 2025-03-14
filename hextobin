@@ -1,0 +1,37 @@
+def hex_to_bin(hex_path, bin_path):
+    memory = {}
+    base_addr = 0
+
+    with open(hex_path, 'r') as f:
+        for line in f:
+            if not line.startswith(':'):
+                continue
+
+            byte_count = int(line[1:3], 16)
+            address = int(line[3:7], 16)
+            record_type = int(line[7:9], 16)
+            data = bytes.fromhex(line[9:9 + byte_count * 2])
+
+            if record_type == 0:  # Data record
+                abs_addr = base_addr + address
+                for i, b in enumerate(data):
+                    memory[abs_addr + i] = b
+            elif record_type == 4:  # Extended linear address
+                base_addr = int.from_bytes(data, 'big') << 16
+
+    # 전체 주소 범위 정렬해서 바이너리로 저장
+    if not memory:
+        print("No data found in HEX.")
+        return
+
+    min_addr = min(memory.keys())
+    max_addr = max(memory.keys())
+    size = max_addr - min_addr + 1
+    image = bytearray([0xFF] * size)
+
+    for addr, byte in memory.items():
+        image[addr - min_addr] = byte
+
+    with open(bin_path, "wb") as out:
+        out.write(image)
+    print(f"HEX → BIN 변환 완료: {bin_path} ({size} bytes)")
