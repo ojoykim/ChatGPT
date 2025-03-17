@@ -1,0 +1,18 @@
+# version_checker.py (또는 __main__.py 에 포함)
+
+import requests
+from packaging import version
+from your_package import __version__
+
+def check_latest_version(repo="yourname/your-repo"):
+    url = f"https://raw.githubusercontent.com/{repo}/main/your_package/__init__.py"
+    try:
+        res = requests.get(url, timeout=2)
+        for line in res.text.splitlines():
+            if "__version__" in line:
+                latest = line.split("=")[-1].strip().strip('"')
+                break
+        if version.parse(latest) > version.parse(__version__):
+            print(f"⚠️  새로운 버전이 있습니다! 현재: {__version__}, 최신: {latest}")
+    except Exception as e:
+        print("버전 확인 실패:", e)
