@@ -1,0 +1,18 @@
+[project]
+name = "your-package-name"
+version = "0.1.0"
+description = "No Type, Just Click"
+authors = [{ name="Your Name", email="you@example.com" }]
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "requests",
+    "packaging"
+]
+
+[project.scripts]
+yourcli = "your_package.cli:main"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
