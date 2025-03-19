@@ -1,0 +1,38 @@
+import os
+from PySide6.QtWidgets import QApplication, QWidget, QFileDialog, QPushButton, QVBoxLayout
+from PySide6.QtCore import QSettings
+
+class FileDialogWithMemory(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("파일 선택 with QSettings")
+        self.resize(300, 100)
+
+        self.settings = QSettings("MyCompany", "MyApp")
+
+        self.button = QPushButton("파일 선택")
+        self.button.clicked.connect(self.select_file)
+
+        layout = QVBoxLayout()
+        layout.addWidget(self.button)
+        self.setLayout(layout)
+
+    def select_file(self):
+        # 1. 저장된 경로 불러오기 (없으면 현재 경로)
+        last_path = self.settings.value("last_path", os.getcwd())
+        print("불러온 경로:", last_path)
+
+        # 2. 파일 선택 다이얼로그 열기
+        file_path, _ = QFileDialog.getOpenFileName(self, "파일 열기", last_path)
+
+        # 3. 선택된 경로 저장
+        if file_path:
+            new_path = os.path.dirname(file_path)
+            print("새 경로 저장:", new_path)
+            self.settings.setValue("last_path", new_path)
+
+if __name__ == "__main__":
+    app = QApplication([])
+    window = FileDialogWithMemory()
+    window.show()
+    app.exec()
