@@ -1,50 +1,35 @@
-from PySide6.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QLineEdit, QFileDialog
+from PySide6.QtWidgets import QApplication, QWidget, QLabel, QPushButton
 from PySide6.QtGui import QPixmap
 from PySide6.QtCore import Qt
 import sys
-import os
 
-class AdaptiveBackgroundUI(QWidget):
+class BackgroundApp(QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Adaptive Image Background UI")
-
-        # 배경 이미지 불러오기
-        pixmap = QPixmap("background.jpg")
-        if pixmap.isNull():
-            self.setFixedSize(600, 400)  # 기본 크기
-            self.bg_label = QLabel("No background.jpg found", self)
-            self.bg_label.setAlignment(Qt.AlignCenter)
-        else:
-            self.setFixedSize(pixmap.width(), pixmap.height())  # 이미지 크기에 맞춤
-            self.bg_label = QLabel(self)
-            self.bg_label.setPixmap(pixmap)
+        self.setWindowTitle("App with PNG Background")
         
+        # PNG 배경 이미지 불러오기
+        self.bg_pixmap = QPixmap("background.png")
+        if not self.bg_pixmap.isNull():
+            self.setFixedSize(self.bg_pixmap.width(), self.bg_pixmap.height())
+        else:
+            self.setFixedSize(600, 400)
+
+        # QLabel을 배경으로
+        self.bg_label = QLabel(self)
+        self.bg_label.setPixmap(self.bg_pixmap)
         self.bg_label.setGeometry(0, 0, self.width(), self.height())
         self.bg_label.lower()
 
-        # 텍스트 입력창 (이미지 위치에 맞게 배치)
-        self.text_input = QLineEdit(self)
-        self.text_input.setPlaceholderText("Enter text...")
-        self.text_input.setGeometry(self.width() // 4, self.height() // 3, self.width() // 2, 30)
+        # 버튼 생성 및 위치 지정
+        self.start_button = QPushButton("Start", self)
+        self.start_button.setGeometry(100, 300, 100, 40)
 
-        # 파일 열기 버튼
-        self.file_button = QPushButton("Open File", self)
-        self.file_button.setGeometry(self.width() // 2 - 50, self.height() // 2, 100, 30)
-        self.file_button.clicked.connect(self.open_file)
-
-        # 결과 출력 라벨
-        self.result_label = QLabel("", self)
-        self.result_label.setGeometry(self.width() // 3, self.height() // 1.5, self.width() // 3, 30)
-        self.result_label.setAlignment(Qt.AlignCenter)
-
-    def open_file(self):
-        file_path, _ = QFileDialog.getOpenFileName(self, "Open File", os.getcwd(), "All Files (*)")
-        if file_path:
-            self.result_label.setText(os.path.basename(file_path))
+        self.stop_button = QPushButton("Stop", self)
+        self.stop_button.setGeometry(250, 300, 100, 40)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    window = AdaptiveBackgroundUI()
-    window.show()
+    win = BackgroundApp()
+    win.show()
     sys.exit(app.exec())
