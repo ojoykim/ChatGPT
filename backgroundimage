@@ -1,0 +1,45 @@
+rom PySide6.QtWidgets import (
+    QApplication, QLabel, QPushButton, QLineEdit, QFileDialog,
+    QWidget
+)
+from PySide6.QtGui import QPixmap
+from PySide6.QtCore import Qt
+import sys
+
+class ImageBackgroundUI(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Image Background UI Example")
+        self.setFixedSize(600, 400)
+
+        # 배경 이미지 설정
+        self.bg_label = QLabel(self)
+        self.bg_label.setPixmap(QPixmap("background.jpg").scaled(600, 400))
+        self.bg_label.setGeometry(0, 0, 600, 400)
+        self.bg_label.lower()
+
+        # 텍스트 입력창
+        self.text_input = QLineEdit(self)
+        self.text_input.setPlaceholderText("Enter text...")
+        self.text_input.setGeometry(150, 100, 300, 30)
+
+        # 파일 열기 버튼
+        self.file_button = QPushButton("Open File", self)
+        self.file_button.setGeometry(250, 150, 100, 30)
+        self.file_button.clicked.connect(self.open_file)
+
+        # 결과 출력 라벨
+        self.result_label = QLabel("", self)
+        self.result_label.setGeometry(200, 200, 200, 30)
+        self.result_label.setAlignment(Qt.AlignCenter)
+
+    def open_file(self):
+        file_path, _ = QFileDialog.getOpenFileName(self, "Open File", "", "All Files (*)")
+        if file_path:
+            self.result_label.setText(file_path.split("/")[-1])
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = ImageBackgroundUI()
+    window.show()
+    sys.exit(app.exec())
