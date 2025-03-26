@@ -1,0 +1,30 @@
+from PySide6.QtWidgets import QApplication, QLabel, QMainWindow
+from PySide6.QtCore import Qt
+import sys
+
+class DropLabel(QLabel):
+    def __init__(self):
+        super().__init__("Drop text here")
+        self.setAcceptDrops(True)
+        self.setAlignment(Qt.AlignCenter)
+
+    def dragEnterEvent(self, event):
+        if event.mimeData().hasText():
+            event.acceptProposedAction()
+
+    def dropEvent(self, event):
+        self.setText(event.mimeData().text())
+
+class MainWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Text Drop Example")
+        self.setGeometry(100, 100, 400, 200)
+        self.label = DropLabel()
+        self.setCentralWidget(self.label)
+
+def main():
+    app = QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
+    sys.exit(app.exec())
