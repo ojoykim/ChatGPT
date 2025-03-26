@@ -1,0 +1,40 @@
+from PySide6.QtWidgets import (
+    QApplication, QMainWindow, QWidget,
+    QVBoxLayout, QLabel, QTabWidget, QLineEdit, QPushButton
+)
+import sys
+
+class Tab1(QWidget):
+    def __init__(self):
+        super().__init__()
+        layout = QVBoxLayout()
+        layout.addWidget(QLabel("Welcome to Tab 1"))
+        layout.addWidget(QLineEdit("Type something..."))
+        self.setLayout(layout)
+
+class Tab2(QWidget):
+    def __init__(self):
+        super().__init__()
+        layout = QVBoxLayout()
+        layout.addWidget(QLabel("Welcome to Tab 2"))
+        button = QPushButton("Click Me")
+        layout.addWidget(button)
+        self.setLayout(layout)
+
+class MainWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Tabbed UI Example")
+        self.setGeometry(100, 100, 500, 300)
+
+        tabs = QTabWidget()
+        tabs.addTab(Tab1(), "Tab One")
+        tabs.addTab(Tab2(), "Tab Two")
+
+        self.setCentralWidget(tabs)
+
+def main():
+    app = QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
+    sys.exit(app.exec())
