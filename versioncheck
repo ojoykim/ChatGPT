@@ -1,18 +1,39 @@
-# version_checker.py (또는 __main__.py 에 포함)
-
 import requests
+import subprocess
+import sys
 from packaging import version
-from your_package import __version__
 
-def check_latest_version(repo="yourname/your-repo"):
-    url = f"https://raw.githubusercontent.com/{repo}/main/your_package/__init__.py"
+# 현재 버전
+__version__ = "0.1.0"
+
+GITHUB_USER = "yourusername"
+GITHUB_REPO = "my_project"
+RELEASE_API = f"https://api.github.com/repos/{GITHUB_USER}/{GITHUB_REPO}/releases/latest"
+
+def check_github_update():
     try:
-        res = requests.get(url, timeout=2)
-        for line in res.text.splitlines():
-            if "__version__" in line:
-                latest = line.split("=")[-1].strip().strip('"')
-                break
-        if version.parse(latest) > version.parse(__version__):
-            print(f"⚠️  새로운 버전이 있습니다! 현재: {__version__}, 최신: {latest}")
+        # GitHub API로 최신 릴리즈 가져오기
+        response = requests.get(RELEASE_API)
+        response.raise_for_status()
+        latest_release = response.json()
+        latest_version = latest_release["tag_name"].lstrip("v")  # 보통 "v0.1.2" 형식
+
+        if version.parse(__version__) < version.parse(latest_version):
+            print(f"새 버전 발견! {__version__} → {latest_version}")
+            choice = input("업데이트 하시겠습니까? (Y/n): ").strip().lower()
+            if choice in ["y", "yes", ""]:
+                asset = latest_release["assets"][0]
+                url = asset["browser_download_url"]
+                filename = asset["name"]
+                print(f"→ {filename} 다운로드 중...")
+
+                # 다운로드
+                with open(filename, "wb") as f:
+                    f.write(requests.get(url).content)
+
+                print(f"{filename} 다운로드 완료. 직접 설치하거나 실행하세요.")
+                sys.exit(0)
+        else:
+            print(f"최신 버전입니다. ({__version__})")
     except Exception as e:
-        print("버전 확인 실패:", e)
+        print("업데이트 확인 실패:", e)
