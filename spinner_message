@@ -2,7 +2,7 @@ import threading
 import itertools
 import sys
 import time
-
+#spinner = itertools.cycle(['⠋','⠙','⠹','⠸','⠼','⠴','⠦','⠧','⠇','⠏'])
 def spinning_message(message, stop_event):
     spinner = itertools.cycle(['|', '/', '-', '\\'])
     while not stop_event.is_set():
