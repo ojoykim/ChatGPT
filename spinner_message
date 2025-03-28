@@ -1,0 +1,24 @@
+import threading
+import itertools
+import sys
+import time
+
+def spinning_message(message, stop_event):
+    spinner = itertools.cycle(['|', '/', '-', '\\'])
+    while not stop_event.is_set():
+        sys.stdout.write(f"\r{message} {next(spinner)}")
+        sys.stdout.flush()
+        time.sleep(0.1)
+    sys.stdout.write(f"\r{message} 완료!     \n")
+
+# 스피너 실행
+stop_event = threading.Event()
+t = threading.Thread(target=spinning_message, args=("버전 확인 중...", stop_event))
+t.start()
+
+# 여기에 너의 실제 버전 확인 작업 (예시로 3초 대기)
+time.sleep(3)
+
+# 스피너 종료
+stop_event.set()
+t.join()
