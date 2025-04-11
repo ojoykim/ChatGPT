@@ -17,3 +17,6 @@ set(CMAKE_EXE_LINKER_FLAGS "--scatter=linker/a34m420.sct --info sizes --info tot
 
 # 확장자 설정 (Keil의 fromelf는 .axf를 .hex로 변환함)
 set(CMAKE_EXECUTABLE_SUFFIX ".elf")
+
+
+cmake -S . -B build -G "Ninja" -DCMAKE_TOOLCHAIN_FILE=toolchain-keil-armcc.cmake
