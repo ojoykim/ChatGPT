@@ -1,0 +1,27 @@
+ID,Parent,Name,Title,Department,Email,Color,Link,Icon
+1,,김철수,CEO,경영본부,kimcs@company.com,#DAE8FC,https://company.com/kimcs,👑
+2,1,이영희,이사,마케팅본부,leeyh@company.com,#E1D5E7,https://company.com/leeyh,⭐
+3,1,박민수,이사,개발본부,parkms@company.com,#FFE6CC,https://company.com/parkms,⭐
+4,2,최지훈,팀장,마케팅1팀,choijh@company.com,#D5E8D4,https://company.com/choijh,◆
+5,2,한서준,팀장,마케팅2팀,hanjs@company.com,#D5E8D4,https://company.com/hanjs,◆
+6,3,정예린,팀장,개발1팀,jungyr@company.com,#F8CECC,https://company.com/jungyr,◆
+7,4,오세훈,사원,마케팅1팀,ohsh@company.com,#FFFFFF,https://company.com/ohsh,•
+
+
+## CSV data
+ID,Parent,Name,Title,Department,Email,Color,Link,Icon
+1,,김철수,CEO,경영본부,kimcs@company.com,#DAE8FC,https://company.com/kimcs,👑
+2,1,이영희,이사,마케팅본부,leeyh@company.com,#E1D5E7,https://company.com/leeyh,⭐
+3,1,박민수,이사,개발본부,parkms@company.com,#FFE6CC,https://company.com/parkms,⭐
+4,2,최지훈,팀장,마케팅1팀,choijh@company.com,#D5E8D4,https://company.com/choijh,◆
+5,2,한서준,팀장,마케팅2팀,hanjs@company.com,#D5E8D4,https://company.com/hanjs,◆
+6,3,정예린,팀장,개발1팀,jungyr@company.com,#F8CECC,https://company.com/jungyr,◆
+7,4,오세훈,사원,마케팅1팀,ohsh@company.com,#FFFFFF,https://company.com/ohsh,•
+
+## Configuration
+id: ID
+parent: Parent
+text: Icon + ' ' + Name + '\n' + Title + '\n' + Department + '\n' + Email
+fillColor: Color
+link: Link
+layout: auto
