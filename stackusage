@@ -1,0 +1,28 @@
+// 링커 심볼 (툴체인에 맞게 이름 확인)
+// GCC 예:  __StackTop, __StackLimit
+// ARMCC/ARMCLANG 예: Image$$ARM_LIB_STACK$$ZI$$Base/Limit
+extern uint8_t __StackTop;    // 스택 시작(상단, 높은 주소)
+extern uint8_t __StackLimit;  // 스택 끝(하단, 낮은 주소)
+
+#define STACK_PATTERN 0xA5
+
+static void Stack_Paint(void) {
+    uint8_t *p = &__StackLimit;
+    while (p < &__StackTop) *p++ = STACK_PATTERN;
+}
+
+static uint32_t Stack_HighWater_Bytes(void) {
+    // 위쪽(높은 주소)에서 아래로 스캔: 패턴이 깨진 첫 지점까지
+    uint8_t *p = &__StackTop;
+    while (p > &__StackLimit && p[-1] == STACK_PATTERN) {
+        --p;
+    }
+    // 사용된 최대 깊이 = 전체 크기 - 남아있는 패턴 길이
+    uint32_t total = (uint32_t)(&__StackTop - &__StackLimit);
+    uint32_t remain = (uint32_t)(p - &__StackLimit);
+    return total - remain;
+}
+
+void Early_Boot_Init(void) {
+    Stack_Paint();  // C런타임 초기화 직후, RTOS 시작 전에 호출 권장
+}
